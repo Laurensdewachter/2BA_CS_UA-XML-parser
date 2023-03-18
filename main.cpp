@@ -1,6 +1,8 @@
 #include "Parser.h"
+#include "Tokenizer.h"
 
 int main() {
-    xmlParser::Parser parser;
-    parser.parseFile("input.xml");
+    xmlParser::Tokenizer::tokenize("input.xml");
+//    xmlParser::Parser parser;
+//    parser.parseFile("input.xml");
 }
