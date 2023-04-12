@@ -3,4 +3,7 @@ project(Parser)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(parser main.cpp Parser.cpp Tokenizer.cpp)
+add_executable(parser main.cpp
+        Parser.cpp
+        ParseTable.cpp
+        Tokenizer.cpp)

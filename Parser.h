@@ -1,10 +1,13 @@
 #ifndef PARSER_PARSER_H
 #define PARSER_PARSER_H
 
+#include "ParseTable.h"
+#include "Tokenizer.h"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <memory>
 #include <stack>
 #include <stdexcept>
 #include <string>
@@ -12,44 +15,25 @@
 
 namespace xmlParser {
 
-enum TableType {
-    shift,
-    reduction,
-    error,
-    accept
-};
-
-struct Replacement {
-    char left;
-    std::vector<char> right;
-};
-
-struct TableEntry {
-    int shift;
-    Replacement replacement;
-};
-
-typedef std::map<char, std::vector<std::pair<TableType, TableEntry>>> ParseTable;
-
 class CustomStack {
 public:
     CustomStack() = default;
 
-    void pushSymbol(char c);
-    void pushToken(unsigned int i);
+    void pushToken(Token c);
+    void pushNumber(unsigned int i);
 
-    char popSymbol();
-    unsigned int popToken();
+    Token popToken();
+    unsigned int popNumber();
 
-    unsigned int topToken() const;
+    unsigned int getTopNumber() const;
 
 private:
     enum stackType {
         symbol,
         token
     };
-    std::stack<char> symbolStack;
-    std::stack<unsigned int> tokenStack;
+    std::stack<Token> tokenStack;
+    std::stack<unsigned int> numberStack;
     stackType currentStack = token;
 
     void changeStack();
@@ -57,16 +41,11 @@ private:
 
 class Parser {
 public:
-    Parser();
-
-    void parseFile(const std::string& filePath);
+    void parseFile(std::stack<Token>& inputStack);
 
 private:
-    std::vector<char> alphabet;
-    ParseTable table;
-
-    bool isLetter(char c) const;
-    bool charInAlphabet(char c) const;
+    std::vector<char> alphabet = {'<', '>', '/', 'S', 'A', 'L', 'R', 'C'};
+    ParseTable table = getParseTable();
 };
 
 }

@@ -13,7 +13,15 @@ enum TokenType {
     Dash,
     TagValue,
     Value,
-    EndOfFile
+    EndOfFile,
+
+    SAccent,
+    S,
+    A,
+    L,
+    R,
+    C,
+    D
 };
 
 struct Token {
