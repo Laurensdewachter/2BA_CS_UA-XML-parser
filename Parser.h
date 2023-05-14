@@ -15,38 +15,40 @@
 
 namespace xmlParser {
 
-class CustomStack {
-public:
-    CustomStack() = default;
+    class CustomStack {
+    public:
+        CustomStack() = default;
 
-    void pushToken(Token c);
-    void pushNumber(unsigned int i);
+        void pushToken(Token c);
 
-    Token popToken();
-    unsigned int popNumber();
+        void pushNumber(unsigned int i);
 
-    unsigned int getTopNumber() const;
+        Token popToken();
 
-private:
-    enum stackType {
-        symbol,
-        token
+        unsigned int popNumber();
+
+        [[nodiscard]] unsigned int getTopNumber() const;
+
+    private:
+        enum stackType {
+            symbol,
+            token
+        };
+        std::stack<Token> tokenStack;
+        std::stack<unsigned int> numberStack;
+        stackType currentStack = token;
+
+        void changeStack();
     };
-    std::stack<Token> tokenStack;
-    std::stack<unsigned int> numberStack;
-    stackType currentStack = token;
 
-    void changeStack();
-};
+    class Parser {
+    public:
+        void parseFile(std::stack<Token> &inputStack);
 
-class Parser {
-public:
-    void parseFile(std::stack<Token>& inputStack);
-
-private:
-    std::vector<char> alphabet = {'<', '>', '/', 'S', 'A', 'L', 'R', 'C'};
-    ParseTable table = getParseTable();
-};
+    private:
+        std::vector<char> alphabet = {'<', '>', '/', 'S', 'A', 'L', 'R', 'C'};
+        ParseTable table = getParseTable();
+    };
 
 }
 

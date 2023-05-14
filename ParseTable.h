@@ -7,26 +7,26 @@
 
 namespace xmlParser {
 
-enum TableType {
-    shift,
-    reduction,
-    error,
-    accept
-};
+    enum TableType {
+        shift,
+        reduction,
+        error,
+        accept
+    };
 
-struct Replacement {
-    TokenType left;
-    std::vector<TokenType> right;
-};
+    struct Replacement {
+        TokenType left;
+        std::vector<TokenType> right;
+    };
 
-struct TableEntry {
-    int shift;
-    Replacement replacement;
-};
+    struct TableEntry {
+        int shift;
+        Replacement replacement;
+    };
 
-typedef std::map<TokenType, std::vector<std::pair<TableType, TableEntry>>> ParseTable;
+    typedef std::map<TokenType, std::vector<std::pair<TableType, TableEntry>>> ParseTable;
 
-ParseTable getParseTable();
+    ParseTable getParseTable();
 
 }
 

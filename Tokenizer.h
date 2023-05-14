@@ -7,32 +7,31 @@
 
 namespace xmlParser {
 
-enum TokenType {
-    LBracket,
-    RBracket,
-    Dash,
-    TagValue,
-    Value,
-    EndOfFile,
+    enum TokenType {
+        LBracket,
+        RBracket,
+        Dash,
+        TagValue,
+        Value,
+        EndOfFile,
 
-    SAccent,
-    S,
-    A,
-    L,
-    R,
-    C,
-    D
-};
+        S,
+        A,
+        L,
+        R,
+        C,
+        D
+    };
 
-struct Token {
-    TokenType type;
-    std::string value;
-};
+    struct Token {
+        TokenType type;
+        std::string value;
+    };
 
-class Tokenizer {
-public:
-    static std::stack<Token> tokenize(const std::string& filePath);
-};
+    class Tokenizer {
+    public:
+        static std::stack<Token> tokenize(const std::string &filePath);
+    };
 
 }
 
