@@ -6,4 +6,5 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(parser main.cpp
         Parser.cpp
         ParseTable.cpp
-        Tokenizer.cpp)
+        Tokenizer.cpp
+        TreeNode.cpp)
