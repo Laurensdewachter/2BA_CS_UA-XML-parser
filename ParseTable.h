@@ -17,6 +17,7 @@ namespace xmlParser {
     struct Replacement {
         TokenType left;
         std::vector<TokenType> right;
+        int rule_number;
     };
 
     struct TableEntry {
