@@ -4,7 +4,7 @@
 int main() {
     auto tokens = xmlParser::Tokenizer::tokenize("input.xml");
     xmlParser::Parser parser;
-    parser.parseFile(tokens);
+    TreeNode* ast = parser.parseFile(tokens);
 
     return 0;
 }

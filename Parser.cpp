@@ -50,10 +50,12 @@ namespace xmlParser {
         else currentStack = symbol;
     }
 
-    void Parser::parseFile(std::stack<Token> &inputStack) {
+    TreeNode* Parser::parseFile(std::stack<Token> &inputStack) {
         CustomStack stack;
         unsigned int shiftNumber = 0;
         stack.pushNumber(shiftNumber);
+
+        TreeNode* current_node = nullptr;
 
         Token token = inputStack.top();
         inputStack.pop();
@@ -75,17 +77,104 @@ namespace xmlParser {
 
                 case reduction: {
                     Replacement replacement = entry.second.replacement;
-                    for (auto &c: replacement.right) {
-                        stack.popNumber();
-                        stack.popToken();
-                    }
-                    shiftNumber = stack.getTopNumber();
-                    shiftNumber = table[replacement.left][shiftNumber].second.shift;
 
                     // TODO: create TreeNode objects here
+                    Token popped_token;
+                    TreeNode* new_node;
+                    switch (replacement.rule_number) {
+                        case 1:
+                            stack.popNumber();
+                            stack.popToken();
+                            stack.popNumber();
+                            popped_token = stack.popToken();
+                            stack.popNumber();
+                            stack.popToken();
 
-                    stack.pushToken({replacement.left, ""});
-                    stack.pushNumber(shiftNumber);
+                            shiftNumber = stack.getTopNumber();
+                            shiftNumber = table[S][shiftNumber].second.shift;
+                            stack.pushToken({S, popped_token.value});
+                            stack.pushNumber(shiftNumber);
+                            break;
+                        case 2:
+                            stack.popNumber();
+                            stack.popToken();
+
+                            shiftNumber = stack.getTopNumber();
+                            shiftNumber = table[A][shiftNumber].second.shift;
+                            stack.pushToken({A, popped_token.value});
+                            stack.pushNumber(shiftNumber);
+                            break;
+                        case 3:
+                            stack.popNumber();
+                            stack.popToken();
+                            stack.popNumber();
+                            popped_token = stack.popToken();
+
+                            shiftNumber = stack.getTopNumber();
+                            shiftNumber = table[A][shiftNumber].second.shift;
+                            stack.pushToken({A, popped_token.value});
+                            stack.pushNumber(shiftNumber);
+                            break;
+                        case 4:
+                            stack.popNumber();
+                            stack.popToken();
+                            stack.popNumber();
+                            popped_token = stack.popToken();
+                            stack.popNumber();
+                            stack.popToken();
+
+                            shiftNumber = stack.getTopNumber();
+                            shiftNumber = table[A][shiftNumber].second.shift;
+                            stack.pushToken({A, popped_token.value});
+                            stack.pushNumber(shiftNumber);
+                            break;
+                        case 5:
+                            stack.popNumber();
+                            stack.popToken();
+                            stack.popNumber();
+                            popped_token = stack.popToken();
+                            stack.popNumber();
+                            stack.popToken();
+
+                            shiftNumber = stack.getTopNumber();
+                            shiftNumber = table[L][shiftNumber].second.shift;
+                            stack.pushToken({L, popped_token.value});
+                            stack.pushNumber(shiftNumber);
+                            break;
+                        case 6:
+                            stack.popNumber();
+                            stack.popToken();
+                            stack.popNumber();
+                            stack.popToken();
+                            stack.popNumber();
+                            popped_token = stack.popToken();
+                            stack.popNumber();
+                            stack.popToken();
+
+                            shiftNumber = stack.getTopNumber();
+                            shiftNumber = table[R][shiftNumber].second.shift;
+                            stack.pushToken({R, popped_token.value});
+                            stack.pushNumber(shiftNumber);
+                            break;
+                        case 7:
+                            stack.popNumber();
+                            popped_token = stack.popToken();
+
+                            shiftNumber = stack.getTopNumber();
+                            shiftNumber = table[C][shiftNumber].second.shift;
+                            stack.pushToken({C, popped_token.value});
+                            stack.pushNumber(shiftNumber);
+                            break;
+                        case 8:
+                            stack.popNumber();
+                            popped_token = stack.popToken();
+
+                            shiftNumber = stack.getTopNumber();
+                            shiftNumber = table[D][shiftNumber].second.shift;
+                            stack.pushToken({D, popped_token.value});
+                            stack.pushNumber(shiftNumber);
+                            break;
+                    }
 
                     entry = table[token.type][shiftNumber];
                     break;
@@ -96,7 +185,7 @@ namespace xmlParser {
             }
         }
         if (token.type == EndOfFile) {
-            return;
+            return current_node;
         } else {
             throw std::runtime_error("There is an error in the input");
         }

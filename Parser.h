@@ -3,6 +3,7 @@
 
 #include "ParseTable.h"
 #include "Tokenizer.h"
+#include "TreeNode.h"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -43,7 +44,7 @@ namespace xmlParser {
 
     class Parser {
     public:
-        void parseFile(std::stack<Token> &inputStack);
+        TreeNode* parseFile(std::stack<Token> &inputStack);
 
     private:
         std::vector<char> alphabet = {'<', '>', '/', 'S', 'A', 'L', 'R', 'C'};
