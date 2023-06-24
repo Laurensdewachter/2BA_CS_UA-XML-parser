@@ -6,21 +6,21 @@
 
 class TreeNode {
 public:
-    explicit TreeNode(std::string value, bool is_brackets);
+    explicit TreeNode(std::string value, bool is_value);
 
     [[nodiscard]] const std::string &getValue() const;
-
-    void addChild(TreeNode *child);
-
     [[nodiscard]] TreeNode *getParent() const;
-
     [[nodiscard]] const std::vector<TreeNode *> &getChildren() const;
+
+    void setValue(const std::string& new_value);
+    void setParent(TreeNode* new_parent);
+    void addChild(TreeNode *child);
 
 private:
     std::string value;
     TreeNode *parent;
     std::vector<TreeNode *> children;
-    bool is_brackets;
+    bool is_value;
 };
 
 
