@@ -16,6 +16,8 @@ public:
     void setParent(TreeNode* new_parent);
     void addChild(TreeNode *child);
 
+    void removeDummy();
+
 private:
     std::string value;
     TreeNode *parent;

@@ -29,3 +29,28 @@ void TreeNode::addChild(TreeNode *child) {
     child->parent = this;
     children.push_back(child);
 }
+
+void TreeNode::removeDummy() {
+    if (children.empty()) {
+        return;
+    }
+
+    for (auto child: children) {
+        child->removeDummy();
+    }
+
+    if (value == "dummy") {
+        for (auto child: children) {
+            child->setParent(parent);
+            parent->addChild(child);
+        }
+    }
+
+    for (auto &i: children) {
+        if (i->getValue() == "dummy") {
+            delete i;
+            children.erase(children.begin());
+            return;
+        }
+    }
+}
