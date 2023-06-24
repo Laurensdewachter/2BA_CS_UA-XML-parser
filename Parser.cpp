@@ -50,12 +50,13 @@ namespace xmlParser {
         else currentStack = symbol;
     }
 
-    TreeNode* Parser::parseFile(std::stack<Token> &inputStack) {
+    TreeNode *Parser::parseFile(std::stack<Token> &inputStack) {
         CustomStack stack;
         unsigned int shiftNumber = 0;
         stack.pushNumber(shiftNumber);
 
-        TreeNode* current_node = nullptr;
+        std::stack<TreeNode *> node_stack;
+        TreeNode *root = nullptr;
 
         Token token = inputStack.top();
         inputStack.pop();
@@ -78,17 +79,22 @@ namespace xmlParser {
                 case reduction: {
                     Replacement replacement = entry.second.replacement;
 
-                    // TODO: create TreeNode objects here
                     Token popped_token;
                     TreeNode* new_node;
                     switch (replacement.rule_number) {
                         case 1:
                             stack.popNumber();
-                            stack.popToken();
-                            stack.popNumber();
                             popped_token = stack.popToken();
                             stack.popNumber();
                             stack.popToken();
+                            stack.popNumber();
+                            stack.popToken();
+
+                            root = node_stack.top();
+                            node_stack.pop();
+                            root->addChild(node_stack.top());
+                            node_stack.pop();
+                            node_stack.pop();
 
                             shiftNumber = stack.getTopNumber();
                             shiftNumber = table[S][shiftNumber].second.shift;
@@ -97,7 +103,7 @@ namespace xmlParser {
                             break;
                         case 2:
                             stack.popNumber();
-                            stack.popToken();
+                            popped_token = stack.popToken();
 
                             shiftNumber = stack.getTopNumber();
                             shiftNumber = table[A][shiftNumber].second.shift;
@@ -110,18 +116,32 @@ namespace xmlParser {
                             stack.popNumber();
                             popped_token = stack.popToken();
 
+                            new_node = new TreeNode("dummy", false);
+                            for (unsigned int i = 0; i < 2; i++) {
+                                new_node->addChild(node_stack.top());
+                                node_stack.pop();
+                            }
+                            node_stack.push(new_node);
+
                             shiftNumber = stack.getTopNumber();
                             shiftNumber = table[A][shiftNumber].second.shift;
-                            stack.pushToken({A, popped_token.value});
+                            stack.pushToken({A, ""});
                             stack.pushNumber(shiftNumber);
                             break;
                         case 4:
                             stack.popNumber();
-                            stack.popToken();
-                            stack.popNumber();
                             popped_token = stack.popToken();
                             stack.popNumber();
                             stack.popToken();
+                            stack.popNumber();
+                            stack.popToken();
+
+                            new_node = node_stack.top();
+                            node_stack.pop();
+                            new_node->addChild(node_stack.top());
+                            node_stack.pop();
+                            node_stack.pop();
+                            node_stack.push(new_node);
 
                             shiftNumber = stack.getTopNumber();
                             shiftNumber = table[A][shiftNumber].second.shift;
@@ -160,6 +180,9 @@ namespace xmlParser {
                             stack.popNumber();
                             popped_token = stack.popToken();
 
+                            new_node = new TreeNode(popped_token.value, true);
+                            node_stack.push(new_node);
+
                             shiftNumber = stack.getTopNumber();
                             shiftNumber = table[C][shiftNumber].second.shift;
                             stack.pushToken({C, popped_token.value});
@@ -168,6 +191,9 @@ namespace xmlParser {
                         case 8:
                             stack.popNumber();
                             popped_token = stack.popToken();
+
+                            new_node = new TreeNode(popped_token.value, false);
+                            node_stack.push(new_node);
 
                             shiftNumber = stack.getTopNumber();
                             shiftNumber = table[D][shiftNumber].second.shift;
@@ -185,7 +211,7 @@ namespace xmlParser {
             }
         }
         if (token.type == EndOfFile) {
-            return current_node;
+            return root;
         } else {
             throw std::runtime_error("There is an error in the input");
         }
